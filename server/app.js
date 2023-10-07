@@ -21,6 +21,19 @@ app.listen(3000, async () => {
 
 
 io.on("connection", (socket) => {
-   console.log(`Подключен клиент`, socket);
+    socket.emit('connected', {
+       message: 'Вы успешно подключены!'
+   });
+
+   socket.on('message', (args) => {
+       console.log(args);
+   })
+
+    socket.on('disconnect', (reason) => {
+        console.log('Клиент был отключен!');
+        console.log(reason);
+    })
 });
+
+
 httpServer.listen(3001);
