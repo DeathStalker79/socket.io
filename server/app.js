@@ -21,13 +21,15 @@ app.listen(3000, async () => {
 
 
 io.on("connection", (socket) => {
+   socket.on('message', (data) => {
+       socket.join('room:' + data.room_id);
+       io.to('room:' + data.room_id).emit('message', data.message);
+   })
+
+
     socket.emit('connected', {
        message: 'Вы успешно подключены!'
    });
-
-   socket.on('message', (args) => {
-       console.log(args);
-   })
 
     socket.on('disconnect', (reason) => {
         console.log('Клиент был отключен!');
@@ -35,5 +37,10 @@ io.on("connection", (socket) => {
     })
 });
 
+// setInterval(() => {
+//     io.emit('ping', {
+//         ts: (new Date)
+//     });
+// }, 10000);
 
 httpServer.listen(3001);
